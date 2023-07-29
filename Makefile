@@ -12,12 +12,15 @@ endif
 .PHONY: all clean
 
 all:
+	rm -f firmware/*.uf2
 	$(DOCKER) build --tag zmk --file Dockerfile .
 	$(DOCKER) run --rm -it --name zmk \
 		-v $(PWD)/firmware:/app/firmware$(SELINUX1) \
 		-v $(PWD)/config:/app/config:ro$(SELINUX2) \
 		-e TIMESTAMP=$(TIMESTAMP) \
 		zmk
+	mv firmware/*-left.uf2 firmware/left.uf2
+	mv firmware/*-right.uf2 firmware/right.uf2
 
 clean:
 	rm -f firmware/*.uf2
